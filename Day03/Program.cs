@@ -17,8 +17,6 @@ var coords2 = input.SelectMany((row, y) =>
     .Select(item => (item.x, item.y))
     .ToList();
 
-input.ToList().ForEach(Console.WriteLine);
-coords2.ForEach(item => Console.WriteLine(item.x + " " + item.y));
 //Console.WriteLine(Part1(input));
 Console.WriteLine(Part2(input));
 return;
