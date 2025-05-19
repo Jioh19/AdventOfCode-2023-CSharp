@@ -1,7 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System.Collections.Concurrent;
-
 Console.WriteLine($"Running directory: {Directory.GetCurrentDirectory()}");
 
 var input = File.ReadAllLines($"{Directory.GetCurrentDirectory()}/input.txt");
@@ -76,7 +74,6 @@ void Part2()
 {
     var min = long.MaxValue;
     var lockObject = new object();
-    var cache = new ConcurrentDictionary<long, long>();
     for (var i = 0; i < seeds.Length; i += 2)
     {
         var seedStart = seeds[i];
