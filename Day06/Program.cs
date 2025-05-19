@@ -20,6 +20,7 @@ var distances = input[1].Split(":")[1]
     .ToArray();
 
 Console.WriteLine($"{Part1()}");
+Console.WriteLine($"{Part2()}");
 return;
 
 int Part1()
@@ -28,14 +29,26 @@ int Part1()
     for (var j = 0; j < times.Length; j++)
     {
         var subtotal = 0;
-        for (var i = 0; i < times[j]; i++)
+        for (var i = 1; i < times[j]; i++)
         {
             if (i * (times[j] - i) <= distances[j]) continue;
             subtotal++;
         }
-
         total *= subtotal;
     }
+    return total;
+}
 
+long Part2()
+{
+    var totalTime = long.Parse(string.Concat(times));
+    var totalDistance = long.Parse(string.Concat(distances));
+    
+    long total = 0;
+    for (long i = 1; i < totalTime; i++)
+    {
+        if (i * (totalTime - i) <= totalDistance) continue;
+        total++;
+    }
     return total;
 }
