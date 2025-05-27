@@ -4,21 +4,19 @@ Console.WriteLine($"Running directory: {Directory.GetCurrentDirectory()}");
 
 var input = File.ReadAllLines($"{Directory.GetCurrentDirectory()}/input.txt");
 
-//input[2..].ToList().ForEach(Console.WriteLine);
-
 var nav = input[0];
 
 var map = new Dictionary<string, Node>();
 
 InsertData();
 
-// Console.WriteLine(nav);
-// foreach (var keyValuePair in map)
-// {
-//     Console.WriteLine($"{keyValuePair.Key} - {keyValuePair.Value.Left?.Key} - {keyValuePair.Value.Right?.Key}");
-// }
-
 Console.WriteLine(Part1());
+
+Console.WriteLine(LcmArray(Part2(input[2..]
+    .Where(n => n[2] is 'A')
+    .Select(str => str
+        .Split(" = ")[0])
+    .ToArray())));
 return;
 
 void InsertData()
@@ -32,7 +30,6 @@ void InsertData()
         var right = next.Split(", ")[1].Replace(")", "");
         node.Left = AddGetNode(left);
         node.Right = AddGetNode(right);
-        //  Console.WriteLine($"{key} {left} {right}");
     });
 }
 
@@ -49,18 +46,60 @@ int Part1()
 {
     var total = 0;
     var node = map[input[2].Split(" = ")[0]];
-   // Console.WriteLine(node.Key);
+
     while (node?.Key is not "ZZZ")
     {
         var direction = nav[total % nav.Length];
         node = direction is 'L' ? node?.Left : node?.Right;
-       // Console.WriteLine(node?.Key );
         total++;
     }
-
     return total;
 }
 
+long[] Part2(string[] starts)
+{
+    var total = new long[starts.Length];
+
+    Parallel.ForEach(
+        starts.Select((start, index) => (start, index)),
+        pair =>
+        {
+            var (start, index) = pair;
+            var node = map[start];
+            var steps = total[index]; 
+
+            while (node?.Key[2] is not 'Z')
+            {
+                var direction = nav[(Index)(steps % nav.Length)];
+                node = direction is 'L' ? node?.Left : node?.Right;
+                steps++;
+            }
+
+            total[index] = steps;
+        });
+    return total;
+}
+
+long Gcd(long a, long b)
+{
+    while (b != 0)
+    {
+        var temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return Math.Abs(a);
+}
+
+long Lcm(long a, long b)
+{
+    return Math.Abs(a / Gcd(a, b) * b);
+}
+
+long LcmArray(long[] numbers)
+{
+    return numbers.Aggregate(Lcm);
+}
 internal class Node(string key)
 {
     public string Key { get; set; } = key;
